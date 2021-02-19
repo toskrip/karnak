@@ -31,6 +31,7 @@ import org.karnak.backend.enums.DestinationType;
 import org.karnak.backend.enums.NodeEventType;
 import org.karnak.backend.model.NodeEvent;
 import org.karnak.backend.model.NotificationSetUp;
+import org.karnak.backend.service.BhutanEditor;
 import org.karnak.backend.service.DeidentifyEditor;
 import org.karnak.backend.service.EmailNotifyProgress;
 import org.karnak.backend.service.FilterEditor;
@@ -293,11 +294,6 @@ public class GatewaySetUp {
       List<ForwardDestination> dstList, ForwardDicomNode fwdSrcNode, DestinationEntity dstNode) {
     try {
       List<AttributeEditor> editors = new ArrayList<>();
-      final boolean filterBySOPClassesEnable = dstNode.getFilterBySOPClasses();
-      if (filterBySOPClassesEnable) {
-        editors.add(new FilterEditor(dstNode.getSOPClassUIDFilters()));
-      }
-
       final List<KheopsAlbumsEntity> listKheopsAlbumEntities = dstNode.getKheopsAlbumEntities();
       SwitchingAlbum switchingAlbum = new SwitchingAlbum();
       editors.add(
@@ -310,12 +306,21 @@ public class GatewaySetUp {
             }
           });
 
-      final boolean desidentificationEnable = dstNode.getDesidentification();
-      final boolean profileDefined =
-          dstNode.getProjectEntity() != null
-              && dstNode.getProjectEntity().getProfileEntity() != null;
-      if (desidentificationEnable && profileDefined) { // TODO add an option in destination model
-        editors.add(new DeidentifyEditor(dstNode));
+      boolean bhutan = true;
+      if (bhutan == true) {
+        editors.add(new BhutanEditor());
+      } else {
+        final boolean filterBySOPClassesEnable = dstNode.getFilterBySOPClasses();
+        if (filterBySOPClassesEnable) {
+          editors.add(new FilterEditor(dstNode.getSOPClassUIDFilters()));
+        }
+        final boolean desidentificationEnable = dstNode.getDesidentification();
+        final boolean profileDefined =
+            dstNode.getProjectEntity() != null
+                && dstNode.getProjectEntity().getProfileEntity() != null;
+        if (desidentificationEnable && profileDefined) { // TODO add an option in destination model
+          editors.add(new DeidentifyEditor(dstNode));
+        }
       }
 
       DicomProgress progress = new DicomProgress();
