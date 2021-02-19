@@ -105,8 +105,7 @@ public class PatientMetadata {
       boolean samePatient = patient.getPatientId().equals(patientID);
       samePatient =
           samePatient
-              && (patient.getIssuerOfPatientId() == null
-                  || patient.getIssuerOfPatientId().equals(issuerOfPatientID));
+              && patient.getPatientName().equals(patientName);
       return samePatient;
     }
     return false;
