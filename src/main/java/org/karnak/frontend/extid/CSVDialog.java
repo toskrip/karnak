@@ -35,15 +35,13 @@ import org.slf4j.LoggerFactory;
 public class CSVDialog extends Dialog {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CSVDialog.class);
-  private static final String EXTERNAL_PSEUDONYM = "External Pseudonym";
-  private static final String PATIENT_ID = "Patient ID";
-  private static final String PATIENT_FIRST_NAME = "Patient first name";
-  private static final String PATIENT_LAST_NAME = "Patient last name";
-  private static final String ISSUER_OF_PATIENT_ID = "Issuer of patient ID";
+  private static final String EXTERNAL_PSEUDONYM = "New Patient ID";
+  private static final String PATIENT_ID = "Current Patient ID";
+  private static final String PATIENT_NAME = "Patient name";
   private static final String TITLE =
       "Upload CSV that contains the correspondence table with the externals pseudonyms";
   private final String[] selectValues = {
-    "", EXTERNAL_PSEUDONYM, PATIENT_ID, PATIENT_FIRST_NAME, PATIENT_LAST_NAME, ISSUER_OF_PATIENT_ID
+    "", EXTERNAL_PSEUDONYM, PATIENT_ID, PATIENT_NAME
   };
   private final List<CachedPatient> patientsList;
   private NumberField fromLineField;
@@ -109,8 +107,7 @@ public class CSVDialog extends Dialog {
             event -> {
               if (selectValuesPositionHashMap.get(EXTERNAL_PSEUDONYM).equals(-1)
                   || selectValuesPositionHashMap.get(PATIENT_ID).equals(-1)
-                  || selectValuesPositionHashMap.get(PATIENT_FIRST_NAME).equals(-1)
-                  || selectValuesPositionHashMap.get(PATIENT_LAST_NAME).equals(-1)) {
+                  || selectValuesPositionHashMap.get(PATIENT_NAME).equals(-1)) {
                 generateErrorMsg();
               } else {
                 readCSVPatients();
@@ -198,8 +195,7 @@ public class CSVDialog extends Dialog {
             .map(
                 stringIntegerEntry -> {
                   if (stringIntegerEntry.getValue().equals(-1)
-                      && !stringIntegerEntry.getKey().equals("")
-                      && !stringIntegerEntry.getKey().equals(ISSUER_OF_PATIENT_ID)) {
+                      && !stringIntegerEntry.getKey().equals("")) {
                     return stringIntegerEntry.getKey();
                   } else {
                     return "";
@@ -211,20 +207,18 @@ public class CSVDialog extends Dialog {
   }
 
   private void readCSVPatients() {
+    final String issuerOfPatientID = "";
+    final String PatientFirstName = "";
     try {
       // Read CSV line by line and use the string array as you want
       for (String[] row :
           allRows.subList(fromLineField.getValue().intValue() - 1, allRows.size())) {
-        String issuerOfPatientID =
-            selectValuesPositionHashMap.get(ISSUER_OF_PATIENT_ID).equals(-1)
-                ? ""
-                : row[selectValuesPositionHashMap.get(ISSUER_OF_PATIENT_ID)];
         final CachedPatient newPatient =
             new CachedPatient(
                 row[selectValuesPositionHashMap.get(EXTERNAL_PSEUDONYM)],
                 row[selectValuesPositionHashMap.get(PATIENT_ID)],
-                row[selectValuesPositionHashMap.get(PATIENT_FIRST_NAME)],
-                row[selectValuesPositionHashMap.get(PATIENT_LAST_NAME)],
+                PatientFirstName,
+                row[selectValuesPositionHashMap.get(PATIENT_NAME)],
                 issuerOfPatientID);
         patientsList.add(newPatient);
       }
