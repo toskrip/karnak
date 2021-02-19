@@ -40,9 +40,7 @@ public class CSVDialog extends Dialog {
   private static final String PATIENT_NAME = "Patient name";
   private static final String TITLE =
       "Upload CSV that contains the correspondence table with the externals pseudonyms";
-  private final String[] selectValues = {
-    "", EXTERNAL_PSEUDONYM, PATIENT_ID, PATIENT_NAME
-  };
+  private final String[] selectValues = {"", EXTERNAL_PSEUDONYM, PATIENT_ID, PATIENT_NAME};
   private final List<CachedPatient> patientsList;
   private NumberField fromLineField;
   private Button readCSVButton;

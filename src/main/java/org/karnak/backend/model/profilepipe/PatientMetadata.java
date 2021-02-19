@@ -103,9 +103,7 @@ public class PatientMetadata {
   public boolean compareCachedPatient(PseudonymPatient patient) {
     if (patient != null) {
       boolean samePatient = patient.getPatientId().equals(patientID);
-      samePatient =
-          samePatient
-              && patient.getPatientName().equals(patientName);
+      samePatient = samePatient && patient.getPatientName().equals(patientName);
       return samePatient;
     }
     return false;
